@@ -30,3 +30,8 @@ body {
 .panel{
 	margin-top: 20px;
 }
+
+#add_comment{
+	cursor: pointer;
+	margin-left: 8px;
+}
