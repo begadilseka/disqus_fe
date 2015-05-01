@@ -2,6 +2,7 @@ body, html {
     height: 600px;
     width: 400px;
     overflow: hidden;
+    background: #fffaf0;
 }
 body {
   /*padding: 20px;*/
@@ -9,8 +10,23 @@ body {
 
 .panel-body {
     max-height: 300px;
+    padding-top: 10px;
+    padding-bottom: 5px;
+}
+
+.panel-footer{
+	padding-top: 5px;
+    padding-bottom: 1px;
 }
 
 .panel-primary{
     max-height: 600px;
+}
+
+#main_div{
+	margin-top: 30px;
+}
+
+.panel{
+	margin-top: 20px;
 }
