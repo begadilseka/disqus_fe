@@ -14,23 +14,16 @@ ractive = new Ractive
 
 ractive.set 'array_length',0
 document.getElementById('pager').style.display = 'none'
-name = ractive.get 'user_name'
-email = ractive.get 'user_email'
-document.getElementById('add_comment').disabled = true if name.length < 1
-document.getElementById('add_comment').disabled = true if email.length < 1
 
 ractive.on 'ok', =>
-  name = ractive.get 'user_name'
-  email = ractive.get 'user_email'
+  ractive.set 'user_name',ractive.get 'user_name'
+  ractive.set 'user_email',ractive.get 'user_email'
 
-  document.getElementById('add_comment').disabled = true if name.length < 1
-  document.getElementById('add_comment').disabled = true if email.length < 1
-
-  if name.length > 0 && email.length > 0
-  	ractive.set 'user_name',ractive.get 'user_name'
-  	ractive.set 'user_email',ractive.get 'user_email'
-  	document.getElementById('add_comment').disabled = false
-  0
+  chrome.storage.local.get 'value',(result) ->
+    result = result.value
+    result.user_name = ractive.get 'user_name'
+    result.user_email = ractive.get 'user_email'
+    chrome.storage.local.set {'value':result}
 
 ractive.on 'add_comment', =>
   date = new Date()
@@ -41,23 +34,74 @@ ractive.on 'add_comment', =>
   month = date.getMonth()
   month = '0' + month if month <=9
 
-  name = ractive.get 'user_name'
-  email = ractive.get 'user_email'
-  comment = ractive.get 'comment'
+  if (ractive.get 'user_name') == '' || (ractive.get 'email') == ''
+  	alert('enter name and surname to add comment')
+  	return
 
-  document.getElementById('add_comment').disabled = true if name.length < 1
-  document.getElementById('add_comment').disabled = true if email.length < 1
+  comments = ractive.get 'comments'
+  comments.push({
+           name:ractive.get 'user_name'
+           email:ractive.get 'user_email'
+           comment:ractive.get 'comment'
+           date:day+'.'+month+'.'+date.getFullYear()
+       })
+  ractive.set 'comments',comments
+  ractive.set 'array_length',comments.length
+  ractive.set 'comment',''
+  chrome.browserAction.setBadgeText {text: comments.length.toString()}
+  document.getElementById('pager').style.display = 'block' if comments.length > 1
 
-  if name.length > 0 && email.length > 0
-  	comments = ractive.get 'comments'
-  	comments.push({
-            name:name
-            email:email
-            comment:ractive.get 'comment'
-            date:day+'.'+month+'.'+date.getFullYear()
-        })
-  	ractive.set 'comments',comments
-  	ractive.set 'array_length',comments.length
-  	ractive.set 'comment',''
-  	document.getElementById('pager').style.display = 'block' if comments.length > 1
-  0
+  chrome.storage.local.get 'value',(result) ->
+    result = result.value
+    chrome.tabs.getSelected null,(tab)->
+      
+      [d, other] = (tab.url).split '://'
+      [domain, oth] = other.split '/'
+      urlN = d + '://' + domain
+      
+      flag = false
+      urls = result.urls
+      for val in urls
+        if urlN == val.url
+          result.urls[_i].comments = ractive.get 'comments'
+          chrome.storage.local.set {'value':result}
+          chrome.browserAction.setBadgeText {text: val.comments.length.toString()}
+          ractive.set 'array_length',val.comments.length.toString()
+          flag = true
+          break
+      if !flag
+        urls.push({
+              url:urlN
+              comments:comments
+          });
+        dannye =
+          user_name:ractive.get 'user_name'
+          user_email:ractive.get 'user_email'
+          urls:urls
+            
+        chrome.storage.local.set {'value':dannye}
+
+
+chrome.storage.local.get 'value',(result) ->
+  result = result.value
+  ractive.set 'user_name',result.user_name
+  ractive.set 'user_email',result.user_email
+  ractive.set 'array_length',(ractive.get 'comments').length
+  
+  chrome.tabs.getSelected null,(tab)->
+    [d, other] = (tab.url).split '://'
+    [domain, oth] = other.split '/'
+    urlN = d + '://' + domain
+    
+    flag = false
+    urls = result.urls
+
+    for val in urls
+      if urlN == val.url
+        ractive.set 'comments',result.urls[_i].comments
+        chrome.browserAction.setBadgeText {text:val.comments.length.toString()}
+        ractive.set 'array_length',(result.urls[_i].comments).length
+        flag = true
+        break
+    if !flag
+      chrome.browserAction.setBadgeText {text:'0'}
