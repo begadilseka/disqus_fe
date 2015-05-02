@@ -20,6 +20,7 @@
   <script src="bower_components/jquery/dist/jquery.js"></script>
   <script src="bower_components/reactive/ractive.js"></script>
   <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
+  <script src="bower_components/md5/src/md5.js"></script>
   <script src="bower_components/bootstrap-material-design/dist/js/material.js"></script>
   <script src="bower_components/bootstrap-material-design/dist/js/ripples.js"></script>
   <!-- endbower -->
@@ -53,7 +54,7 @@
               {{#each comments}}
               <div class="list-group-item">
                 <div class="row-picture">
-                  <img class="circle" src="http://lorempixel.com/56/56/people/1" alt="icon">
+                  <img class="circle" src="http://www.gravatar.com/avatar/{{ava}}?s=48" alt="icon">
                 </div>
                 <div class="row-content">
                   <div class="least-content">{{date}}</div>

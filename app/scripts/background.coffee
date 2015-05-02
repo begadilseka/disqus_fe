@@ -14,6 +14,7 @@ dannye =
       comments:
         [
           name:''
+          ava:''
           email:''
           comment:''
           date:''

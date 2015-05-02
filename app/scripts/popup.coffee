@@ -38,9 +38,11 @@ ractive.on 'add_comment', =>
   	alert('enter name and surname to add comment')
   	return
 
+  ractive.set 'ava',(md5 (ractive.get 'user_email'))
   comments = ractive.get 'comments'
   comments.push({
            name:ractive.get 'user_name'
+           ava:ractive.get 'ava'
            email:ractive.get 'user_email'
            comment:ractive.get 'comment'
            date:day+'.'+month+'.'+date.getFullYear()
@@ -55,6 +57,8 @@ ractive.on 'add_comment', =>
     result = result.value
     chrome.tabs.getSelected null,(tab)->
       
+
+
       [d, other] = (tab.url).split '://'
       [domain, oth] = other.split '/'
       urlN = d + '://' + domain
