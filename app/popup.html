@@ -51,25 +51,34 @@
         <div class="panel-body">
           <div class="col-lg-10">
             <div class="list-group">
-              {{#each comments}}
-              <div class="list-group-item">
-                <div class="row-picture">
-                  <img class="circle" src="http://www.gravatar.com/avatar/{{ava}}?s=48" alt="icon">
+              {{#comments:i}}
+              <div id = "div{{i}}">
+                <div class="list-group-item">
+                  <div class="row-picture">
+                    <img class="circle" src="http://www.gravatar.com/avatar/{{ava}}?s=48" alt="icon">
+                  </div>
+                  <div class="row-content">
+                    <div class="least-content">{{date}}</div>
+                    <div class="reply">
+                      <a on-click='reply:{{this}},{{i}}'>reply</a>
+                    </div>
+                    {{#reply_to}}
+                      <div class="reply_to">Reply to: {{reply_to}}</div>
+                    {{/reply_to}}
+                    {{^reply_to}}
+
+                    {{/reply_to}}
+                    <h4 class="list-group-item-heading" id = "n{{i}}">{{name}}</h4>
+                    <p class="list-group-item-text">{{comment}}</p>
+                  </div>
                 </div>
-                <div class="row-content">
-                  <div class="least-content">{{date}}</div>
-                  <h4 class="list-group-item-heading">{{name}}</h4>
-                  <p class="list-group-item-text">{{comment}}</p>
-                </div>
+                <div class="list-group-separator"></div>
               </div>
-              <div class="list-group-separator"></div>
-              {{/each}}
+              {{/comments}}
+              <ul class="pager" id = "show_more">
+                <li><a on-click="show_more" id = "show_more_text">show more ...</a></li>
+              </ul>
             </div>
-            
-            <ul class="pager" id = 'pager'>
-              <li><a href="#">Previous</a></li>
-              <li><a href="#">Next</a></li>
-            </ul>
           </div>
         </div>
         <div class="panel-footer">
